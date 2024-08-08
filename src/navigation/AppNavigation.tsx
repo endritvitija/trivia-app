@@ -11,7 +11,7 @@ import CustomHeader from "../components/CustomHeader/CustomHeader";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const AppNavigator = () => {
-  const [progress, setProgress] = useState(0.25);
+  // const [progress, setProgress] = useState(0.25);
 
   return (
     <SafeAreaProvider>
@@ -30,12 +30,7 @@ export const AppNavigator = () => {
                 elevation: 0,
                 shadowOpacity: 0,
               },
-              header: () => (
-                <CustomHeader
-                  title={route.params.categoryName}
-                  progress={progress}
-                />
-              ),
+              header: () => <CustomHeader />,
             })}
           />
         </Stack.Navigator>

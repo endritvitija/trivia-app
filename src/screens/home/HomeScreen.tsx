@@ -21,14 +21,18 @@ import {
   Categories,
   QuestionCategories,
 } from "../../constants/types/categories.type";
+import { useAtom } from "jotai";
+import { currentCategoryAtom } from "../../atoms/triviaAtoms";
 
 const HomeScreen = () => {
   const navigation = useNavigation<QuestionScreenNavigationProp>();
 
+  const [currentCategory, setCurrentCategory] = useAtom(currentCategoryAtom);
+
   const listRef = useRef(null);
 
   const onNavigate = (category: QuestionCategories) => {
-    console.log(category);
+    setCurrentCategory(category.label);
     navigation.navigate("Question", {
       categoryId: parseInt(category.value),
       categoryName: category.label,
