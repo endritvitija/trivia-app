@@ -8,12 +8,12 @@ import { Feather } from "@expo/vector-icons";
 
 type CategoriesProps = {
   data: QuestionCategories;
-  onPress: (categoryId: string) => void;
+  onPress: (data: QuestionCategories) => void;
 };
 
 const Category = ({ data, onPress }: CategoriesProps) => {
   return (
-    <QuestionCard onPress={() => onPress(data.value)}>
+    <QuestionCard onPress={() => onPress(data)}>
       <QuestionTitle>{data.label}</QuestionTitle>
       <Feather name="arrow-right" size={24} color="#222"/>
     </QuestionCard>

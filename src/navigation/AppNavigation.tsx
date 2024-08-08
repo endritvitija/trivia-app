@@ -5,10 +5,14 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import HomeScreen from "../screens/home/HomeScreen";
 import QuestionScreen from "../screens/question/QuestionScreen";
 import { RootStackParamList } from "../navigation";
+import { useState } from "react";
+import CustomHeader from "../components/CustomHeader/CustomHeader";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const AppNavigator = () => {
+  const [progress, setProgress] = useState(0.25);
+
   return (
     <SafeAreaProvider>
       <NavigationContainer>
@@ -21,7 +25,18 @@ export const AppNavigator = () => {
           <Stack.Screen
             name="Question"
             component={QuestionScreen}
-            options={{ headerShown: false }}
+            options={({ route }) => ({
+              headerStyle: {
+                elevation: 0,
+                shadowOpacity: 0,
+              },
+              header: () => (
+                <CustomHeader
+                  title={route.params.categoryName}
+                  progress={progress}
+                />
+              ),
+            })}
           />
         </Stack.Navigator>
       </NavigationContainer>
