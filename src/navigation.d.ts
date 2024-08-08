@@ -2,7 +2,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 type RootStackParamList = {
   Home: undefined;
-  Question: { category: number };
+  Question: { categoryId: number, categoryName: string };
 };
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;

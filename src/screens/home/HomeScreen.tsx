@@ -18,8 +18,8 @@ import { QuestionScreenNavigationProp } from "../../navigation";
 import categoriesData from "../../constants/question-categories.json";
 import Category from "../../components/Category/Category";
 import {
-  QuestionCategories,
   Categories,
+  QuestionCategories,
 } from "../../constants/types/categories.type";
 
 const HomeScreen = () => {
@@ -27,8 +27,12 @@ const HomeScreen = () => {
 
   const listRef = useRef(null);
 
-  const onNavigate = (category: number) => {
-    navigation.navigate("Question", { category });
+  const onNavigate = (category: QuestionCategories) => {
+    console.log(category);
+    navigation.navigate("Question", {
+      categoryId: parseInt(category.value),
+      categoryName: category.label,
+    });
   };
 
   const renderListHeaderComponent = useCallback(
@@ -45,7 +49,12 @@ const HomeScreen = () => {
             title="General Knowledge"
             size="medium"
             iconName="arrow-right"
-            onPress={() => onNavigate(Categories.GENERAL_KNOWLEDGE)}
+            onPress={() =>
+              onNavigate({
+                value: Categories.GENERAL_KNOWLEDGE.toString(),
+                label: "General Knowledge",
+              })
+            }
           />
         </Card>
         <CategoriesText>Choose a Quiz Category</CategoriesText>
@@ -58,7 +67,12 @@ const HomeScreen = () => {
     ({ item }: ListRenderItemInfo<any>) => (
       <Category
         data={item}
-        onPress={(categoryId: string) => onNavigate(parseInt(categoryId))}
+        onPress={({ value, label }) =>
+          onNavigate({
+            value,
+            label,
+          })
+        }
       />
     ),
     []
