@@ -1,58 +1,103 @@
-import { View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
-import { getQuestions } from "../../services/triviaService";
+import { View, Text } from "react-native";
 import { useRoute } from "@react-navigation/native";
+import { useAtom } from "jotai";
+
+import { getQuestions } from "../../services/triviaService";
 import { Categories } from "../../constants/types/categories.type";
 import { QuestionContainer, QuestionsCountLabel, QuestionText } from "./styles";
 import Answer from "../../components/Answer/Answer";
 import Button from "../../components/Button/Button";
+import {
+  currentQuestionIndexAtom,
+  progressAtom,
+  questionsAtom,
+  selectedAnswerAtom,
+  selectedAnswersAtom,
+} from "../../atoms/triviaAtoms";
 
 const QuestionScreen = () => {
-  const [question, setQuestion] = useState<QuizQuestion[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+
+  const [questions, setQuestions] = useAtom(questionsAtom);
+  const [selectedAnswer, setSelectedAnswer] = useAtom(selectedAnswerAtom);
+  const [progress, setProgress] = useAtom(progressAtom);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useAtom(currentQuestionIndexAtom);
+  const [selectedAnswers, setSelectedAnswers] = useAtom(selectedAnswersAtom);
 
   const route = useRoute();
-
-  const categoryId = route.params.categoryId || Categories.GENERAL_KNOWLEDGE;
-
-  const fetchCategories = async () => {
-    try {
-      setLoading(true);
-      const data = await getQuestions(categoryId);
-      setQuestion(data.results);
-    } catch (error) {
-      console.error("Failed to fetch categories", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const categoryId = route.params?.categoryId || Categories.GENERAL_KNOWLEDGE;
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    const fetchQuestions = async () => {
+      try {
+        setLoading(true);
+        const data = await getQuestions(categoryId);
+        setQuestions(data.results);
+        resetQuizState();
+      } catch (error) {
+        console.error("Failed to fetch questions", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, [categoryId]);
+
+  const resetQuizState = () => {
+    setCurrentQuestionIndex(0);
+    setSelectedAnswers({});
+    setProgress(0.25);
+    setSelectedAnswer(null);
+  };
 
   const handleAnswerPress = (title: string) => {
     setSelectedAnswer(title);
   };
 
-  const handleNextQuestion = () => {};
+  const handleNextQuestion = () => {
+    if (selectedAnswer !== null) {
+      setSelectedAnswers((prev) => ({
+        ...prev,
+        [currentQuestionIndex]: selectedAnswer,
+      }));
+      setSelectedAnswer(null);
+
+      if (currentQuestionIndex < questions.length - 1) {
+        setCurrentQuestionIndex((prev) => prev + 1);
+        setProgress(prev => prev + 0.25)
+      } else {
+        const correctAnswers = questions.filter(
+          (q, index) => q.correct_answer === selectedAnswers[index]
+        ).length;
+        setProgress(0.25)
+        alert(`Quiz Finished! You answered ${correctAnswers} out of ${questions.length} correctly.`);
+      }
+    }
+  };
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
 
   return (
     <QuestionContainer>
-      <QuestionsCountLabel>Questions 1 of 4</QuestionsCountLabel>
-      <QuestionText>{question[0]?.question}</QuestionText>
+      <QuestionsCountLabel>
+        Question {currentQuestionIndex + 1} of {questions.length}
+      </QuestionsCountLabel>
+      <QuestionText>{questions[currentQuestionIndex]?.question}</QuestionText>
 
-      <Answer
-        title="Correct"
-        selected={selectedAnswer === "Correct"}
-        onPress={() => handleAnswerPress("Correct")}
-      />
-      <Answer
-        title="Incorrect"
-        selected={selectedAnswer === "Incorrect"}
-        onPress={() => handleAnswerPress("Incorrect")}
-      />
+      {questions[currentQuestionIndex]?.incorrect_answers
+        .concat(questions[currentQuestionIndex]?.correct_answer)
+        .map((answer) => (
+          <Answer
+            key={answer}
+            title={answer}
+            selected={selectedAnswer === answer}
+            onPress={() => handleAnswerPress(answer)}
+          />
+        ))}
 
       <Button
         title="Next"

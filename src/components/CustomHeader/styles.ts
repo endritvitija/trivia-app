@@ -1,9 +1,8 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Animated } from "react-native";
 import styled from "styled-components/native";
 import fonts from "../../assets/fonts/fonts";
 
 interface CustomHeaderProps {
-  title: string;
   progress: number; // Progress should be a value between 0 and 1
 }
 
@@ -16,6 +15,7 @@ const HeaderContainer = styled.View`
 const HeaderContent = styled.View`
   flex-direction: row;
   align-items: center;
+  background-color: #fff;
 `;
 
 const BackButton = styled(TouchableOpacity)`
@@ -37,10 +37,9 @@ const ProgressBarContainer = styled.View`
   margin-top: 16px;
 `;
 
-const ProgressBar = styled.View<{ progress: number }>`
+const ProgressBar = styled(Animated.View)`
   height: 100%;
   background-color: #8a2be2;
-  width: ${({ progress }) => `${progress * 100}%`};
 
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
