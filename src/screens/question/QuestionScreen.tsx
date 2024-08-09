@@ -3,7 +3,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   Easing,
-  interpolate,
   withTiming,
 } from "react-native-reanimated";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -26,6 +25,7 @@ import Loading from "../../components/Loading/Loading";
 
 import { ResultsScreenNavigationProp } from "../../navigation";
 import { QuestionContainer, QuestionsCountLabel, QuestionText } from "./styles";
+import commonStyles from "../../styles/commonStyles";
 
 const QuestionScreen = () => {
   const [loading, setLoading] = useState(true);
@@ -78,7 +78,7 @@ const QuestionScreen = () => {
       try {
         setLoading(true);
         const data = await getQuestions(categoryId);
-        // Decode HTML entities in questions
+        // Decode HTML in questions
         const decodedQuestions = data.results.map((question) => ({
           ...question,
           question: he.decode(question.question),
@@ -108,24 +108,38 @@ const QuestionScreen = () => {
   };
 
   const handleNextQuestion = () => {
-    if (selectedAnswer !== null) {
-      setSelectedAnswers((prev) => ({
-        ...prev,
-        [currentQuestionIndex]: selectedAnswer,
-      }));
-      setSelectedAnswer(null);
-      animateTransition();
-      if (currentQuestionIndex < questions.length - 1) {
-        setProgress((prev) => prev + 0.25);
-        setTimeout(() => {
-          setCurrentQuestionIndex((prev) => prev + 1);
-        }, 300);
-      } else {
-        navigation.navigate("Results");
-        setProgress(0.25);
-      }
+    if (selectedAnswer === null) return;
+
+    setSelectedAnswers((prev) => ({
+      ...prev,
+      [currentQuestionIndex]: selectedAnswer,
+    }));
+    setSelectedAnswer(null);
+    animateTransition();
+
+    if (currentQuestionIndex < questions.length - 1) {
+      setProgress((prev) => prev + 0.25);
+      setTimeout(() => {
+        setCurrentQuestionIndex((prev) => prev + 1);
+      }, 300);
+      return;
     }
+
+    navigation.navigate("Results");
+    setProgress(0.25);
   };
+
+  const renderAnwers = () =>
+    questions[currentQuestionIndex]?.incorrect_answers
+      .concat(questions[currentQuestionIndex]?.correct_answer)
+      .map((answer) => (
+        <Answer
+          key={answer}
+          title={answer}
+          selected={selectedAnswer === answer}
+          onPress={() => handleAnswerPress(answer)}
+        />
+      ));
 
   if (loading) {
     return <Loading />;
@@ -136,25 +150,15 @@ const QuestionScreen = () => {
       <QuestionsCountLabel>
         Question {currentQuestionIndex + 1} of {questions.length}
       </QuestionsCountLabel>
-      <Animated.View style={[animatedStyle, { minHeight: 300 }]}>
+      <Animated.View style={[animatedStyle, commonStyles.minHeight]}>
         <QuestionText>{questions[currentQuestionIndex]?.question}</QuestionText>
-
-        {questions[currentQuestionIndex]?.incorrect_answers
-          .concat(questions[currentQuestionIndex]?.correct_answer)
-          .map((answer) => (
-            <Answer
-              key={answer}
-              title={answer}
-              selected={selectedAnswer === answer}
-              onPress={() => handleAnswerPress(answer)}
-            />
-          ))}
+        {renderAnwers()}
       </Animated.View>
       <Button
         title="Next"
         iconName="arrow-right"
         size="full"
-        style={{ marginTop: 50 }}
+        style={commonStyles.mt50}
         onPress={handleNextQuestion}
       />
     </QuestionContainer>

@@ -1,10 +1,12 @@
 import React from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { ActivityIndicator } from "react-native";
+
 import { LoadingContainer } from "./styles";
+import commonStyles from "../../styles/commonStyles";
 
 const Loading = () => {
   return (
-    <LoadingContainer style={{ flex: 1 }}>
+    <LoadingContainer style={commonStyles.fullScreen}>
       <ActivityIndicator size="small" />
     </LoadingContainer>
   );
