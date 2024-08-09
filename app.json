@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "trivia-app",
+    "name": "Tirvia",
     "slug": "trivia-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,7 +9,7 @@
     "splash": {
       "image": "./src/assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F2F2F2"
     },
     "ios": {
       "supportsTablet": true
@@ -17,7 +17,12 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#F2F2F2"
+      },
+      "splash": {
+        "image": "./src/assets/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#F2F2F2"
       }
     },
     "web": {
