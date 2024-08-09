@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  Easing,
+  interpolate,
+  withTiming,
+} from "react-native-reanimated";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useAtom } from "jotai";
 import he from "he";
@@ -36,6 +42,36 @@ const QuestionScreen = () => {
 
   const route = useRoute();
   const categoryId = route.params?.categoryId || Categories.GENERAL_KNOWLEDGE;
+
+  /**
+   * Animation
+   */
+  const translateX = useSharedValue(0);
+
+  const animateTransition = () => {
+    translateX.value = 0;
+
+    translateX.value = withTiming(
+      -300,
+      {
+        duration: 300,
+        easing: Easing.inOut(Easing.ease),
+      },
+      () => {
+        translateX.value = 300;
+        translateX.value = withTiming(0, {
+          duration: 300,
+          easing: Easing.inOut(Easing.ease),
+        });
+      }
+    );
+  };
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: translateX.value }],
+    };
+  });
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -78,10 +114,12 @@ const QuestionScreen = () => {
         [currentQuestionIndex]: selectedAnswer,
       }));
       setSelectedAnswer(null);
-
+      animateTransition();
       if (currentQuestionIndex < questions.length - 1) {
-        setCurrentQuestionIndex((prev) => prev + 1);
         setProgress((prev) => prev + 0.25);
+        setTimeout(() => {
+          setCurrentQuestionIndex((prev) => prev + 1);
+        }, 300);
       } else {
         navigation.navigate("Results");
         setProgress(0.25);
@@ -98,19 +136,20 @@ const QuestionScreen = () => {
       <QuestionsCountLabel>
         Question {currentQuestionIndex + 1} of {questions.length}
       </QuestionsCountLabel>
-      <QuestionText>{questions[currentQuestionIndex]?.question}</QuestionText>
+      <Animated.View style={[animatedStyle, { minHeight: 300 }]}>
+        <QuestionText>{questions[currentQuestionIndex]?.question}</QuestionText>
 
-      {questions[currentQuestionIndex]?.incorrect_answers
-        .concat(questions[currentQuestionIndex]?.correct_answer)
-        .map((answer) => (
-          <Answer
-            key={answer}
-            title={answer}
-            selected={selectedAnswer === answer}
-            onPress={() => handleAnswerPress(answer)}
-          />
-        ))}
-
+        {questions[currentQuestionIndex]?.incorrect_answers
+          .concat(questions[currentQuestionIndex]?.correct_answer)
+          .map((answer) => (
+            <Answer
+              key={answer}
+              title={answer}
+              selected={selectedAnswer === answer}
+              onPress={() => handleAnswerPress(answer)}
+            />
+          ))}
+      </Animated.View>
       <Button
         title="Next"
         iconName="arrow-right"

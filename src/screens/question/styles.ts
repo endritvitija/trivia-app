@@ -19,6 +19,7 @@ const QuestionText = styled.Text`
     color: #020202;
 
     margin-top: 30px;
+    min-height: 80px;
 `
 
 export { QuestionContainer, QuestionsCountLabel, QuestionText };
