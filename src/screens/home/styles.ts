@@ -39,12 +39,19 @@ const CardDescription = styled.Text`
   margin-top: 15px;
 `;
 
-
 const CategoriesText = styled.Text`
   font-size: 20px;
   font-family: ${fonts.semiBold};
 
   margin-top: 30px;
-`
+`;
 
-export { Container, Logo, WelcomeText, Card, CardTitle, CardDescription, CategoriesText };
+export {
+  Container,
+  Logo,
+  WelcomeText,
+  Card,
+  CardTitle,
+  CardDescription,
+  CategoriesText,
+};

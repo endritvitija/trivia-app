@@ -1,6 +1,12 @@
 import styled from "styled-components/native";
 import fonts from "../../assets/fonts/fonts";
 import { SafeAreaView } from "react-native-safe-area-context";
+import LottieView from "lottie-react-native";
+
+interface LottieStyledProps {
+  lottieSize: number;
+  lottieMarginRight: number;
+}
 
 const ResultsContainer = styled(SafeAreaView)`
   padding: 10px 20px;
@@ -44,7 +50,6 @@ const PerformanceText = styled.Text`
 
 const Card = styled.View`
   flex-direction: row;
-  /* justify-content: space-between; */
   align-items: center;
 
   background-color: white;
@@ -56,6 +61,13 @@ const Card = styled.View`
   border: solid 1px #ddd;
 `;
 
+const StyledLottieView = styled(LottieView)<LottieStyledProps>`
+  width: ${({ lottieSize }) => `${lottieSize}px`};
+  height: ${({ lottieSize }) => `${lottieSize}px`};
+  margin-right: ${({ lottieMarginRight }) => `${lottieMarginRight}px`};
+  background-color: #fff;
+`;
+
 export {
   ResultsContainer,
   Logo,
@@ -64,4 +76,5 @@ export {
   Card,
   ResultText,
   PerformanceText,
+  StyledLottieView,
 };

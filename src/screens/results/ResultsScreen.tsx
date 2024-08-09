@@ -10,9 +10,12 @@ import {
   PerformanceText,
   ResultsContainer,
   ResultText,
+  StyledLottieView,
   SubTitle,
   Title,
 } from "./styles";
+import commonStyles from "../../styles/commonStyles";
+
 import Button from "../../components/Button/Button";
 import { questionsAtom, selectedAnswersAtom } from "../../atoms/triviaAtoms";
 import { HomeScreenNavigationProp } from "../../navigation";
@@ -48,6 +51,8 @@ const ResultsScreen = () => {
     return quizResultTextMap[score] || QuizResultText.NotPassed;
   };
 
+  const handleHomePress = () => navigation.navigate("Home");
+
   return (
     <ResultsContainer>
       <Logo>Trivia</Logo>
@@ -55,15 +60,11 @@ const ResultsScreen = () => {
       <SubTitle>Check your detailed summary report.</SubTitle>
 
       <Card>
-        <LottieView
+        <StyledLottieView
           autoPlay
           ref={animation}
-          style={{
-            width: lottieSize,
-            height: lottieSize,
-            marginRight: lottieMarginRight,
-            backgroundColor: "#fff",
-          }}
+          lottieSize={lottieSize}
+          lottieMarginRight={lottieMarginRight}
           source={lottieSource}
         />
         <View>
@@ -78,8 +79,8 @@ const ResultsScreen = () => {
       <Button
         title="Home"
         size="full"
-        style={{ marginTop: 100 }}
-        onPress={() => navigation.navigate("Home")}
+        style={commonStyles.mt100}
+        onPress={handleHomePress}
       />
     </ResultsContainer>
   );
