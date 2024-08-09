@@ -13,6 +13,8 @@ import {
   Logo,
   WelcomeText,
 } from "./styles";
+import commonStyles from "../../styles/commonStyles";
+
 import Button from "../../components/Button/Button";
 import Category from "../../components/Category/Category";
 import { QuestionScreenNavigationProp } from "../../navigation";
@@ -21,6 +23,7 @@ import {
   Categories,
   QuestionCategories,
 } from "../../constants/types/categories.type";
+
 import { currentCategoryAtom } from "../../atoms/triviaAtoms";
 
 const HomeScreen = () => {
@@ -39,37 +42,37 @@ const HomeScreen = () => {
     [navigation, setCurrentCategory]
   );
 
-  const renderListHeaderComponent = useCallback(() => (
-    <>
-      <Logo>Trivia</Logo>
-      <WelcomeText>Welcome</WelcomeText>
-      <Card>
-        <CardTitle>Let’s Start Now!</CardTitle>
-        <CardDescription>
-          Play, Learn and Explore with Exciting Quizzes!
-        </CardDescription>
-        <Button
-          title="General Knowledge"
-          size="medium"
-          iconName="arrow-right"
-          onPress={() =>
-            handleNavigate({
-              value: Categories.GENERAL_KNOWLEDGE.toString(),
-              label: "General Knowledge",
-            })
-          }
-        />
-      </Card>
-      <CategoriesText>Choose a Quiz Category</CategoriesText>
-    </>
-  ), [handleNavigate]);
+  const renderListHeaderComponent = useCallback(
+    () => (
+      <>
+        <Logo>Trivia</Logo>
+        <WelcomeText>Welcome</WelcomeText>
+        <Card>
+          <CardTitle>Let’s Start Now!</CardTitle>
+          <CardDescription>
+            Play, Learn and Explore with Exciting Quizzes!
+          </CardDescription>
+          <Button
+            title="General Knowledge"
+            size="medium"
+            iconName="arrow-right"
+            onPress={() =>
+              handleNavigate({
+                value: Categories.GENERAL_KNOWLEDGE.toString(),
+                label: "General Knowledge",
+              })
+            }
+          />
+        </Card>
+        <CategoriesText>Choose a Quiz Category</CategoriesText>
+      </>
+    ),
+    [handleNavigate]
+  );
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<QuestionCategories>) => (
-      <Category
-        data={item}
-        onPress={() => handleNavigate(item)}
-      />
+      <Category data={item} onPress={() => handleNavigate(item)} />
     ),
     [handleNavigate]
   );
@@ -80,8 +83,8 @@ const HomeScreen = () => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Container style={{flex: 1}}>
+    <SafeAreaView style={commonStyles.fullScreen}>
+      <Container style={commonStyles.fullScreen}>
         <FlashList
           ref={listRef}
           data={categoriesData}

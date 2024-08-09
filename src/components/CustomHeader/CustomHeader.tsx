@@ -8,7 +8,6 @@ import { currentCategoryAtom, progressAtom } from "../../atoms/triviaAtoms";
 
 import {
   BackButton,
-  CustomHeaderProps,
   HeaderContainer,
   HeaderContent,
   ProgressBar,
@@ -41,7 +40,7 @@ const CustomHeader = () => {
   useEffect(() => {
     Animated.timing(widthAnim, {
       toValue: progress * 100,
-      duration: 500, // Animation duration
+      duration: 500,
       useNativeDriver: false,
     }).start();
   }, [progress]);
