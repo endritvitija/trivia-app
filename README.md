@@ -11,6 +11,16 @@ The **Trivia App** is a mobile application built with React Native and Expo. Thi
 - **Progress Tracking**: See how well you’re doing as you progress through the quiz.
 - **Detailed Results**: Review your performance at the end of each quiz.
 
+## Future Improvements
+
+There are a few enhancements that I plan to implement when time permits:
+
+### 1. **Light/Dark Theme Support**
+   - **Description**: Integrating a light/dark theme toggle will enhance the user experience by allowing users to switch between light and dark modes depending on their preference or system settings.
+
+### 2. **Internationalization (i18n) with `react-i18next`**
+   - **Description**: Implementing internationalization (i18n) will enable the app to support multiple languages, making it accessible to a broader audience. Using `react-i18next` will provide a robust solution for managing translations and localization.
+
 ## Prerequisites
 
 To run and develop this project, you'll need the following tools installed on your machine:
